@@ -16,11 +16,10 @@ public class Demo4 {
 		// 입력객체를 생성
 		Scanner sc = new Scanner(System.in);
 		// 키보드로부터 입력받은것을 정수로 변환해서 변수 year에 대입
-		int year = sc.nextInt();
+		System.out.println("년도를 입력하세요(ex 2023) : ");
+		int year = sc.nextInt();		
 		
-		
-//		year % 4 == 0  윤년
-		
+//		year % 4 == 0  윤년		
 //		!( (year % 100 == 0) && (year % 400!=0) )  윤년
 		
 		boolean isYoonYear = (year % 4 == 0) &&
