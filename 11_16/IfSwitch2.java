@@ -12,6 +12,7 @@ public class IfSwitch2 {
 		// 등급에따른 세부내역 출력
 		displayInfo(grade);
 	}
+	
 	private static void displayInfo(String grade) {
 		// switch문을 이용해서 A학점을 받으면.. 전액 장학급지급
 //		B학점을 받으면.. 부분 장학급지급
