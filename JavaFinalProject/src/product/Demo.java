@@ -1,6 +1,5 @@
 package product;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -40,12 +39,17 @@ public class Demo {
 				System.out.print("가격을 입력하세요");
 				int price = sc.nextInt();
 				
+				ProductVO productVO 
+					= new ProductVO(0, pname, stock, price, null, null, null);
+				
 				List<ProductVO> resultOne =  DbCRUD.selectByName(pname,false);
-				if(resultOne.size() > 0) {  // 제품이 있음				
-					DbCRUD.updataData(pname, stock, price, rs.getInt("id"));
+				
+				if(resultOne.size() > 0) {  // 제품이 있음	
+					productVO.setId( resultOne.get(0).getId() );
+					DbCRUD.updataData(productVO);
 					System.out.println("수정했습니다.");
 				}else {  // 신규상품임
-					DbCRUD.insertData(pname, stock, price);
+					DbCRUD.insertData(productVO);
 					System.out.println("추가했습니다.");
 				}				
 				break;			

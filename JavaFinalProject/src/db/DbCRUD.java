@@ -22,22 +22,22 @@ public class DbCRUD implements AutoCloseable{
 			e.printStackTrace();
 		}
 	}
-	public static void insertData(String pname,int stock, int price) throws Exception {
+	public static void insertData(ProductVO productVO) throws Exception {
 		// db에 데이터 추가
 		String sql = "insert into product(pname,stock,price) values(?,?,?)";
 		pstmt= conn.prepareStatement(sql);
-		pstmt.setString(1, pname);	pstmt.setInt(2, stock);
-		pstmt.setInt(3, price);
+		pstmt.setString(1, productVO.getPname());	pstmt.setInt(2, productVO.getStock());
+		pstmt.setInt(3, productVO.getPrice());
 		pstmt.executeUpdate();
 	}
-	public static void updataData(String pname, int stock,int price,int id) throws Exception {
+	public static void updataData(ProductVO productVO) throws Exception {
 		// modify_dt를 현재시간으로 업데이트한다
 		String sql = " update product set pname=?, stock=?, price=?, "
 				+ " modify_dt = now()"
 				+ " where id=? and delyn='N'";
 		pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, pname); pstmt.setInt(2, stock);
-		pstmt.setInt(3, price); pstmt.setInt(4, id);
+		pstmt.setString(1, productVO.getPname()); pstmt.setInt(2, productVO.getStock());
+		pstmt.setInt(3, productVO.getPrice()); pstmt.setInt(4, productVO.getId());
 		pstmt.executeUpdate();
 		
 	}
