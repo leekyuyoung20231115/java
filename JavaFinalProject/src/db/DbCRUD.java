@@ -4,7 +4,12 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import product.ProductVO;
 
 public class DbCRUD implements AutoCloseable{
 	private static Connection conn = null;	
@@ -44,7 +49,8 @@ public class DbCRUD implements AutoCloseable{
 		pstmt.setInt(2, id);		
 		pstmt.executeUpdate();
 	}
-	public static ResultSet selectByName(String pname,boolean isAll) throws Exception {
+	public static List<ProductVO> selectByName(String pname,boolean isAll) throws Exception {
+		List<ProductVO> result = new ArrayList<ProductVO>();
 		String sql = "select * from product where delyn='N'"
 				+ " and pname like ?";
 		pstmt= conn.prepareStatement(sql);
@@ -52,7 +58,17 @@ public class DbCRUD implements AutoCloseable{
 			pstmt.setString(1, "%"+pname+"%");
 		else
 			pstmt.setString(1, pname);
-		return pstmt.executeQuery();		
+		ResultSet rs = pstmt.executeQuery();
+		while (rs.next()) {
+			ProductVO productVO = new ProductVO(
+					rs.getInt("id"), rs.getString("pname"), 
+					rs.getInt("stock"), rs.getInt("price"), 
+					rs.getDate("create_dt"), rs.getDate("modify_dt"), 
+					rs.getString("delyn")
+					);
+			result.add(productVO);			
+		}
+		return result;
 	}
 	
 	@Override
