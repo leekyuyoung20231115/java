@@ -1,0 +1,82 @@
+create or replace PROCEDURE AVERAGEPRICE 
+(
+  AVERAGEVAL OUT VARCHAR2 
+) AS 
+BEGIN
+  select avg(price) into AVERAGEVAL from book where price is not null;
+END;
+
+
+-------------------------------------------------
+
+create or replace PROCEDURE interest
+AS
+myInterest NUMERIC;
+price NUMERIC;
+cursor interestCursor IS SELECT saleprice FROM orders;
+BEGIN
+myInterest := 0.0;
+OPEN interestCursor;
+    LOOP
+        FETCH interestCursor INTO price;
+        EXIT WHEN interestCursor%NOTFOUND;
+        IF price >= 30000 THEN
+            myInterest := myInterest + price * 0.1;
+        ELSE
+            myInterest := myInterest + price * 0.05;
+        END IF;
+    END LOOP;
+CLOSE InterestCursor;
+dbms_output.put_line('전체 이익 금액 = ' ||myInterest);
+END;
+
+-------------------------------------
+
+CREATE OR REPLACE PROCEDURE PS_BOOKDELETE 
+(
+  myBOOKID IN NUMBER 
+) AS 
+    mycount NUMBER;
+BEGIN  
+  select count(*) into mycount from orders where bookID = myBookID;
+    if(mycount = 0) then
+        delete from book where bookid = myBOOKID;
+    else
+        delete from orders where bookid = myBOOKID;
+        delete from book where bookid = myBOOKID;
+    end if;    
+END PS_BOOKDELETE;
+
+-------------------------------------------
+
+create or replace PROCEDURE PS_INSERTBOOK 
+(  
+  MYBOOKNAME IN VARCHAR2 
+, MYPUBLISHER IN VARCHAR2 
+, myprice IN NUMBER 
+) AS 
+BEGIN
+  insert into book(bookid,bookname,publisher,price)
+    values(book_seq.nextval,mybookname,mypublisher,myprice);
+END PS_INSERTBOOK;
+
+------------------------------------------------------
+
+create or replace PROCEDURE PS_INSERTROUPDATE 
+(
+  myBookID IN NUMBER 
+, myBOOKNAME IN VARCHAR2 
+, myPUBLISHER IN VARCHAR2 
+, myPRICE IN NUMBER
+) AS 
+    mycount NUMBER;
+BEGIN
+  select count(*) into mycount from book where bookID = myBookID;
+  if(mycount = 0) then
+    insert into book(bookid,bookname,publisher,price)
+        values(myBookID,mybookname,myPUBLISHER,myPRICE);
+  else
+    update book set price = myPRICE,publisher = myPUBLISHER, bookname = mybookname
+        where book.bookid = myBookID;
+  end if;
+END PS_INSERTROUPDATE;
